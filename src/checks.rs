@@ -1,16 +1,35 @@
 use serde::Deserialize;
 
-pub fn get_checks(token: String, url: &str) -> Result<Vec<Check>, Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
-    let checks = client
-        .get(url)
-        .bearer_auth(token)
-        .send()?
-        .json::<Vec<Check>>()?;
+use crate::{get_token, ApiConsumer};
+
+pub fn get_checks(
+    consumer: &mut ApiConsumer,
+    url: &str,
+) -> Result<Vec<Check>, Box<dyn std::error::Error>> {
+    let response = checks_request(consumer.get_token().to_owned(), url);
+    let checks: Vec<Check> = match response {
+        Ok(v) => v.json::<Vec<Check>>()?,
+        Err(err) => {
+            if err.status().unwrap() == 401 {
+                let new_token = get_token()?.token;
+
+                consumer.set_token(new_token);
+
+                let new_response = checks_request(consumer.get_token().to_owned(), url)?;
+
+                new_response.json::<Vec<Check>>()?
+            } else {
+                panic!("unexpected error when trying to get new token")
+            }
+        }
+    };
 
     Ok(checks)
 }
-
+fn checks_request(token: String, url: &str) -> Result<reqwest::blocking::Response, reqwest::Error> {
+    let client = reqwest::blocking::Client::new();
+    client.get(url).bearer_auth(token).send()
+}
 #[derive(Debug, Deserialize)]
 pub enum CheckType {
     In,

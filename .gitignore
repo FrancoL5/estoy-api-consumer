@@ -1,1 +1,6 @@
 /target
+log.txt
+result.txt
+*.txt
+result.txt
+log.txt

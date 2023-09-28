@@ -1,19 +1,17 @@
 use std::fmt;
 
 use crate::{
-    checks::{get_checks, Check, CheckType},
-    get_token,
+    checks::{get_checks, Check, CheckType}, ApiConsumer,
 };
 use chrono::FixedOffset;
 
 // with_timezone(&FixedOffset::west_opt(TRES_HORAS.into()).unwrap()
 const TRES_HORAS: u16 = 3 * 3600;
 
-pub fn parse() -> Result<Vec<ParsedStruct>, Box<dyn std::error::Error>> {
+pub fn parse(consumer: &mut ApiConsumer) -> Result<Vec<ParsedStruct>, Box<dyn std::error::Error>> {
     let url = "https://api.estoy.com.ar/admin/company/404745/check?";
     let param = "offset=0&limit=100&orderBy=createdAt&order=desc&tz=-180";
-    let token = get_token()?.token;
-    let checks = get_checks(token, &format!("{}{}", url, param))?;
+    let checks = get_checks(consumer, &format!("{}{}", url, param))?;
 
     let parsed: Vec<ParsedStruct> = checks
         .iter()
