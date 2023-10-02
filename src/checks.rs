@@ -26,7 +26,7 @@ pub fn get_checks(
 
     Ok(checks)
 }
-fn checks_request(token: String, url: &str) -> Result<reqwest::blocking::Response, reqwest::Error> {
+pub fn checks_request(token: String, url: &str) -> Result<reqwest::blocking::Response, reqwest::Error> {
     let client = reqwest::blocking::Client::new();
     client.get(url).bearer_auth(token).send()
 }
