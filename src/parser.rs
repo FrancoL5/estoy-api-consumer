@@ -1,12 +1,10 @@
 use std::fmt;
 
 use crate::{
-    checks::{get_checks, Check, CheckType}, ApiConsumer,
+    checks::{get_checks, Check, CheckType},
+    util::{format_datetime_offset, parse_time},
+    ApiConsumer,
 };
-use chrono::FixedOffset;
-
-// with_timezone(&FixedOffset::west_opt(TRES_HORAS.into()).unwrap()
-const TRES_HORAS: u16 = 3 * 3600;
 
 pub fn parse(consumer: &mut ApiConsumer) -> Result<Vec<ParsedStruct>, Box<dyn std::error::Error>> {
     let url = "https://api.estoy.com.ar/admin/company/404745/check?";
@@ -31,12 +29,11 @@ pub struct ParsedStruct {
 
 impl ParsedStruct {
     pub fn parse_checks(check: &Check) -> Result<Self, Box<dyn std::error::Error>> {
-        let fecha = chrono::DateTime::parse_from_str(&check.date, "%+")?
-            .with_timezone(&FixedOffset::west_opt(TRES_HORAS.into()).unwrap());
+        let fecha = parse_time(&check.date).unwrap();
         let algo = get_location(check.locationId).into();
         Ok(ParsedStruct {
             numero_interno: check.employeeId,
-            fecha: fecha.format("%d/%m/%Y").to_string(),
+            fecha: format_datetime_offset(fecha),
             horario: fecha.time().format("%H:%M").to_string(),
             tipo: match check.r#type {
                 CheckType::In => "E".into(),
@@ -57,7 +54,7 @@ impl fmt::Display for ParsedStruct {
     }
 }
 
-fn get_location(location: u16) -> impl Into<String>{
+pub fn get_location(location: u16) -> impl Into<String> {
     match location {
         1727 => "010",
         1730 => "009",

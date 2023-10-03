@@ -3,6 +3,7 @@ use std::collections::HashMap;
 mod checks;
 mod login;
 pub mod parser;
+mod util;
 
 use crate::login::LoginResponse;
 use crate::parser::parse;
