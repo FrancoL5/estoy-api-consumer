@@ -9,3 +9,6 @@ pub fn parse_time(date: &str) -> Result<DateTime<FixedOffset>, Box<dyn std::erro
 pub fn format_datetime_offset(date: DateTime<FixedOffset>) -> String {
     date.format("%d/%m/%Y").to_string()
 }
+pub fn parse_to_time(date: DateTime<FixedOffset>) -> String {
+    date.time().format("%H:%M").to_string()
+}

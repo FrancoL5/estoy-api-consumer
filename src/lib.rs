@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 mod checks;
+mod create_report;
 mod login;
 pub mod parser;
 mod util;
@@ -10,6 +11,7 @@ use crate::parser::parse;
 use crate::parser::ParsedStruct;
 use ::parser::files::File;
 use checks::get_checks;
+use create_report::generate_report;
 
 fn get_token() -> Result<LoginResponse, Box<dyn std::error::Error>> {
     let mut body_json = HashMap::new();
@@ -63,7 +65,7 @@ impl ApiConsumer {
         match parse(self) {
             Ok(v) => Some(v),
             Err(err) => {
-                File::write_to(&*err.to_string(), "./log.txt", true).unwrap();
+                generate_log(err);
                 None
             }
         }
@@ -91,10 +93,28 @@ impl ApiConsumer {
             }
         }
     }
-    pub fn get_unparsed_data(&mut self) -> Result<Vec<checks::Check>, Box<dyn std::error::Error>> {
+    pub fn get_unparsed_data(
+        &mut self,
+        limit: u32,
+    ) -> Result<Vec<checks::Check>, Box<dyn std::error::Error>> {
         let url = "https://api.estoy.com.ar/admin/company/404745/check?";
-        let param = "offset=0&limit=100&orderBy=createdAt&order=desc&tz=-180";
+        let param = format!(
+            "offset=0&limit={}&orderBy=createdAt&order=desc&tz=-180",
+            limit
+        );
         get_checks(self, &format!("{}{}", url, param))
+    }
+
+    pub fn create_report(&mut self) -> Result<(), Box<dyn std::error::Error>>{
+        let result = generate_report(self.get_unparsed_data(300)?);
+        let mut export = String::from("legajo,nombre,sucursal,fecha,entrada,salida\n");
+        for (_, map) in result.iter() {
+            for (_, k) in map.iter() {
+                export.push_str(&k.to_string());
+            }
+            File::write_to(&*export, "export.csv", false)?;
+        };
+        Ok(())
     }
 }
 
@@ -106,11 +126,13 @@ mod test {
     #[test]
     fn hacer_llamado() {
         let mut consumer = ApiConsumer::new().unwrap();
-        consumer.write_parse_file("./");
-        let parsed_struct = consumer.get_parsed_struct().unwrap();
-        parsed_struct.iter().for_each(|v| println!("{v}"));
-        let checks = consumer.get_unparsed_data().unwrap();
+        // consumer.write_parse_file("./");
+        // let parsed_struct = consumer.get_parsed_struct().unwrap();
+        // parsed_struct.iter().for_each(|v| println!("{v}"));
+        // let checks = consumer.get_unparsed_data().unwrap();
 
-        checks.iter().for_each(|v| println!("{:?}", v));
+        // checks.iter().for_each(|v| println!("{:?}", v));
+
+        consumer.create_report().unwrap()
     }
 }

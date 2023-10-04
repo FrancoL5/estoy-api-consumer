@@ -8,7 +8,7 @@ use crate::{
 
 pub fn parse(consumer: &mut ApiConsumer) -> Result<Vec<ParsedStruct>, Box<dyn std::error::Error>> {
     let url = "https://api.estoy.com.ar/admin/company/404745/check?";
-    let param = "offset=0&limit=100&orderBy=createdAt&order=desc&tz=-180";
+    let param = "offset=0&limit=300&orderBy=createdAt&order=desc&tz=-180";
     let checks = get_checks(consumer, &format!("{}{}", url, param))?;
 
     let parsed: Vec<ParsedStruct> = checks

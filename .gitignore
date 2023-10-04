@@ -2,5 +2,6 @@
 log.txt
 result.txt
 *.txt
-result.txt
+result*
 log.txt
+export.csv

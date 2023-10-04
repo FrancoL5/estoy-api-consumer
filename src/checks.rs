@@ -30,7 +30,7 @@ pub fn checks_request(token: String, url: &str) -> Result<reqwest::blocking::Res
     let client = reqwest::blocking::Client::new();
     client.get(url).bearer_auth(token).send()
 }
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub enum CheckType {
     In,
     Out,
