@@ -1,23 +1,10 @@
 use std::fmt;
 
 use crate::{
-    checks::{get_checks, Check, CheckType},
+    checks::{ Check, CheckType},
     util::{format_datetime_offset, parse_time},
-    ApiConsumer,
 };
 
-pub fn parse(consumer: &mut ApiConsumer) -> Result<Vec<ParsedStruct>, Box<dyn std::error::Error>> {
-    let url = "https://api.estoy.com.ar/admin/company/404745/check?";
-    let param = "offset=0&limit=300&orderBy=createdAt&order=desc&tz=-180";
-    let checks = get_checks(consumer, &format!("{}{}", url, param))?;
-
-    let parsed: Vec<ParsedStruct> = checks
-        .iter()
-        .map(|v: &Check| ParsedStruct::parse_checks(v).unwrap())
-        .collect();
-
-    Ok(parsed)
-}
 
 pub struct ParsedStruct {
     pub numero_interno: u16,
