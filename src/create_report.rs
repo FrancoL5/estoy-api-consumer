@@ -91,7 +91,7 @@ fn calculate_check(check: &Check) -> EmployeeChecks {
         fecha,
         entrada,
         salida,
-        sucursal: get_location(check.locationId).into(),
+        sucursal: get_location(check.locationId.unwrap_or(0)).into(),
         nombre,
     }
 }

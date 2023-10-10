@@ -49,11 +49,11 @@ impl ApiConsumer {
             token: get_token()?.token,
         })
     }
-    pub fn set_token(&mut self, token: String) {
+     fn set_token(&mut self, token: String) {
         self.token = token
     }
 
-    pub fn get_token(&mut self) -> String {
+     fn get_token(&mut self) -> String {
         self.token.clone()
     }
     /// Returns the struct representing the parsed data
@@ -86,8 +86,8 @@ impl ApiConsumer {
                 let response = checks_request(self.get_token(), url);
                 checks = match response {
                     Ok(v) => {
-                        println!("{:?}", v);
                         if v.status() == 401 {
+                            println!("got token");
                             let new_token = get_token().unwrap().token;
 
                             self.set_token(new_token);

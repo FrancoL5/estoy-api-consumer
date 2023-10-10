@@ -1,6 +1,6 @@
 use std::sync::{Arc, Mutex};
 
-use crate::api_consumer::ApiConsumer;
+use crate::{api_consumer::ApiConsumer, ThreadApiConsumer};
 
 pub struct Consumer {
     pub agent: Arc<Mutex<ApiConsumer>>,
@@ -11,7 +11,7 @@ impl Consumer {
             agent: Arc::new(Mutex::new(ApiConsumer::new().unwrap())),
         }
     }
-    pub fn new_agent(&self) -> Arc<Mutex<ApiConsumer>> {
+    pub fn new_agent(&self) -> ThreadApiConsumer {
         Arc::clone(&self.agent)
     }
 }

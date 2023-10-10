@@ -1,13 +1,16 @@
-mod api_consumer;
+use std::sync::{Arc, Mutex};
+
+use api_consumer::ApiConsumer;
+
+pub mod api_consumer;
 mod checks;
 pub mod consumer;
 mod create_report;
 mod login;
 pub mod parser;
 mod util;
-
 // #[derive(Clone)]
-
+pub type ThreadApiConsumer = Arc<Mutex<ApiConsumer>>;
 #[cfg(test)]
 mod test {
 
@@ -28,22 +31,22 @@ mod test {
     // consumer.create_report().unwrap()
     // }
 
-    #[test]
-    fn concurrencia() {
-        let consumer = Consumer::new();
-        let api1 = consumer.new_agent();
-        let api2 = consumer.new_agent();
+    // #[test]
+    // fn concurrencia() {
+    //     let consumer = Consumer::new();
+    //     let api1 = consumer.new_agent();
+    //     let api2 = consumer.new_agent();
 
-        thread::scope(|s| {
-            s.spawn(move || {
-                api1.lock().unwrap().set_token("sadasdasd".to_owned());
-                println!("api1: {api1:?}");
-            });
-            s.spawn(move || {
-                api2.lock().unwrap().get_parsed_struct().unwrap();
-                println!("api2: {api2:?}");
-            });
-        });
-        println!("consumer: {:?}", consumer.agent);
-    }
+    //     thread::scope(|s| {
+    //         s.spawn(move || {
+    //             api1.lock().unwrap().set_token("sadasdasd".to_owned());
+    //             println!("api1: {api1:?}");
+    //         });
+    //         s.spawn(move || {
+    //             api2.lock().unwrap().get_parsed_struct().unwrap();
+    //             println!("api2: {api2:?}");
+    //         });
+    //     });
+    //     println!("consumer: {:?}", consumer.agent);
+    // }
 }

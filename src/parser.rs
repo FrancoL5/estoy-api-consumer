@@ -1,10 +1,9 @@
 use std::fmt;
 
 use crate::{
-    checks::{ Check, CheckType},
+    checks::{Check, CheckType},
     util::{format_datetime_offset, parse_time},
 };
-
 
 pub struct ParsedStruct {
     pub numero_interno: u16,
@@ -17,7 +16,7 @@ pub struct ParsedStruct {
 impl ParsedStruct {
     pub fn parse_checks(check: &Check) -> Result<Self, Box<dyn std::error::Error>> {
         let fecha = parse_time(&check.date).unwrap();
-        let algo = get_location(check.locationId).into();
+        let algo = get_location(check.locationId.unwrap_or(0)).into();
         Ok(ParsedStruct {
             numero_interno: check.employeeId,
             fecha: format_datetime_offset(fecha),

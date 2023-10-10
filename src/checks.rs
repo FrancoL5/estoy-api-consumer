@@ -21,7 +21,7 @@ pub struct Check {
     pub userLocation: UserLocation,
     pub employeeId: u16,
     pub companyId: u8,
-    pub locationId: u16,
+    pub locationId: Option<u16>,
     pub recordType: Option<String>,
     pub cafeteriaType: Option<String>,
     pub createdAt: String,
