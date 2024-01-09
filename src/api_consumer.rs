@@ -162,7 +162,7 @@ impl ApiConsumer {
 
                 match File::write_to(&*result, &*format!("{dir}result.txt"), false) {
                     Ok(()) => {
-                        File::write_to(bk, &*format!("{dir}result.txt"), true).unwrap();
+                        File::write_to(bk, &*format!("./bk.txt"), true).unwrap();
                         Some(values)
                     }
                     Err(err) => {
