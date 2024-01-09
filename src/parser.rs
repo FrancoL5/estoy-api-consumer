@@ -35,7 +35,7 @@ impl fmt::Display for ParsedStruct {
         write!(
             f,
             "{} {} {} {} {}\n",
-            self.numero_interno, self.fecha, self.horario, self.tipo, self.sucursal
+            self.numero_interno, self.fecha, self.horario, self.sucursal, self.tipo
         )
     }
 }
