@@ -4,7 +4,7 @@ use crate::{
     checks::{Check, CheckType},
     util::{format_datetime_offset, parse_time},
 };
-
+#[derive(Debug)]
 pub struct ParsedStruct {
     pub numero_interno: u16,
     pub fecha: String,

@@ -14,12 +14,23 @@ pub type ThreadApiConsumer = Arc<Mutex<ApiConsumer>>;
 #[cfg(test)]
 mod test {
 
-    use std::thread;
+    // use std::thread;
 
-    use crate::consumer::Consumer;
+    // use crate::consumer::Consumer;
 
-    // #[test]
-    // fn hacer_llamado() {
+
+    use crate::api_consumer::ApiConsumer;
+
+    #[test]
+    fn hacer_llamado() {
+        let mut api = ApiConsumer::new().unwrap();
+        let data = api
+            // .get_parsed_struct(Some(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap()))
+            .get_parsed_struct(None)
+            .unwrap();
+        println!("{:?}", data);
+
+    }
     // let mut consumer = ApiConsumer::new().unwrap();
     // consumer.write_parse_file("./");
     // let parsed_struct = consumer.get_parsed_struct().unwrap();
@@ -48,5 +59,4 @@ mod test {
     //         });
     //     });
     //     println!("consumer: {:?}", consumer.agent);
-    // }
 }
