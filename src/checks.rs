@@ -1,44 +1,37 @@
 use serde::Deserialize;
 
-pub fn checks_request(token: String, url: &str) -> Result<reqwest::blocking::Response, reqwest::Error> {
+pub fn checks_request(
+    token: String,
+    url: &str,
+) -> Result<reqwest::blocking::Response, reqwest::Error> {
     let client = reqwest::blocking::Client::new();
     client.get(url).bearer_auth(token).send()
 }
-#[derive(Debug, Deserialize, PartialEq)]
+
+pub type Checks = Vec<Check>;
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Check {
+    pub id: usize,
+    #[serde(rename = "type")]
+    pub check_type: CheckType,
+    pub date: String,
+    pub home_office: usize,
+    pub user_location: String,
+    pub employee_id: usize,
+    pub company_id: usize,
+    pub location_id: usize,
+    pub created_at_origin: String,
+    pub updated_at_origin: String,
+    pub employee: String,
+    pub created_at: String,
+    pub updated_at: String,
+    pub colaborador: usize,
+}
+
+#[derive(Deserialize, Debug, PartialEq)]
 pub enum CheckType {
     In,
     Out,
-}
-#[allow(non_snake_case, dead_code)]
-#[derive(Deserialize, Debug)]
-pub struct Check {
-    pub id: usize,
-    pub r#type: CheckType,
-    pub date: String,
-    pub picture: String,
-    pub hash: Option<String>,
-    pub homeOffice: u8,
-    pub userLocation: UserLocation,
-    pub employeeId: u16,
-    pub companyId: u8,
-    pub locationId: Option<u16>,
-    pub recordType: Option<String>,
-    pub cafeteriaType: Option<String>,
-    pub createdAt: String,
-    pub updatedAt: String,
-    pub employee: Employee,
-    pub longitude: Option<String>,
-    pub latitude: Option<String>,
-}
-#[allow(non_snake_case, dead_code)]
-#[derive(Deserialize, Debug)]
-pub struct UserLocation {
-    pub r#type: String,
-    pub coordinates: Vec<f32>,
-}
-#[allow(non_snake_case, dead_code)]
-#[derive(Deserialize, Debug)]
-pub struct Employee {
-    pub firstName: String,
-    pub lastName: String,
 }

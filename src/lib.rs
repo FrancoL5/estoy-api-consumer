@@ -1,6 +1,6 @@
-use std::sync::{Arc, Mutex};
 
-use api_consumer::ApiConsumer;
+
+// use api_consumer::ApiConsumer;
 
 pub mod api_consumer;
 mod checks;
@@ -10,7 +10,7 @@ mod login;
 pub mod parser;
 mod util;
 // #[derive(Clone)]
-pub type ThreadApiConsumer = Arc<Mutex<ApiConsumer>>;
+// pub type ThreadApiConsumer = Arc<Mutex<ApiConsumer>>;
 #[cfg(test)]
 mod test {
 
@@ -18,18 +18,32 @@ mod test {
 
     // use crate::consumer::Consumer;
 
+    use std::str::FromStr;
 
-    use crate::api_consumer::ApiConsumer;
+    use chrono::NaiveDate;
+
+    use crate::{api_consumer::ApiConsumer, parser::ParsedStruct};
+
+    // use crate::api_consumer::ApiConsumer;
 
     #[test]
     fn hacer_llamado() {
-        let mut api = ApiConsumer::new().unwrap();
-        let data = api
-            // .get_parsed_struct(Some(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap()))
-            .get_parsed_struct(None)
-            .unwrap();
-        println!("{:?}", data);
+        // let mut api = ApiConsumer::new().unwrap();
+        // let data = api
+        //     // .get_parsed_struct(Some(NaiveDate::from_ymd_opt(2024, 1, 1).unwrap()))
+        //     .checks_with_date_filter(NaiveDate::from_ymd_opt(2024, 1, 8).unwrap(),NaiveDate::from_ymd_opt(2024, 1, 9).unwrap());
+        // println!("{:?}", data);
 
+        let api = ApiConsumer::new();
+        let result: Vec<ParsedStruct> = api
+            .write_parse_file(
+                NaiveDate::from_str("2024-01-23").unwrap(),
+                NaiveDate::from_str("2024-01-22").unwrap(),
+                "./",
+            )
+            .unwrap();
+
+        result.iter().for_each(|check| println!("{}", check))
     }
     // let mut consumer = ApiConsumer::new().unwrap();
     // consumer.write_parse_file("./");

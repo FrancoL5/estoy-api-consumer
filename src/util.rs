@@ -1,6 +1,6 @@
 use chrono::{DateTime, FixedOffset};
 
-const TRES_HORAS: u16 = 3 * 3600;
+pub const TRES_HORAS: u16 = 3 * 3600;
 
 pub fn parse_time(date: &str) -> Result<DateTime<FixedOffset>, Box<dyn std::error::Error>> {
     Ok(chrono::DateTime::parse_from_str(date, "%+")?
